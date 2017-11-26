@@ -1,7 +1,6 @@
 from collections import OrderedDict
 import struct
 import xml2dict
-import math
 import json
 
 file = '''
@@ -73,7 +72,7 @@ class Serialize():
         h ^= OSSerializeBinary_h.kOSSerializeEndCollecton if end else 0x0
         self.d.append(h)
         # Fill the data with nulls, divisible by uint32_t size
-        len_fill = int(math.ceil(len(text) / 4.0))
+        len_fill = len(text) + 3 >> 2
         def nfill(d,l):
             d_m = d
             while len(d_m) != l:
@@ -94,7 +93,7 @@ def _OSSerializeBinary(s,level_data):
     '''Recursion of the parsed dictionary'''
     for index,element in enumerate(level_data):
         # is end if we are in the last element of the list
-        is_end = True if index == len(level_data) - 1 else False 
+        is_end = True if index == len(level_data) - 1 else False
         s.parse(element, level_data[element], end=is_end)
         try:
             _OSSerializeBinary(s, level_data[element])
