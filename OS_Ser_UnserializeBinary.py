@@ -6,7 +6,7 @@ import json
 
 file = '''
 <dict>                          <!-- dict, level 0 | END! -->
-    <string>AAA</string>        <!-- string, level 1 -->
+    <string>AAAAA</string>        <!-- string, level 1 -->
     <boolean>1</boolean>        <!-- bool, level 1 -->
 
     <string>BBB</string>        <!-- string, level 1 -->
@@ -73,7 +73,7 @@ class Serialize():
         h ^= OSSerializeBinary_h.kOSSerializeEndCollecton if end else 0x0
         self.d.append(h)
         # Fill the data with nulls, divisible by uint32_t size
-        len_fill = int(math.ceil(len(text) / 8.0))
+        len_fill = int(math.ceil(len(text) / 4.0))
         def nfill(d,l):
             d_m = d
             while len(d_m) != l:
@@ -89,9 +89,6 @@ class Serialize():
 
     def binary(self):
         return self.d
-
-def pprint(data):
-    print json.dumps(data, indent=1)
 
 def _OSSerializeBinary(s,level_data):
     '''Recursion of the parsed dictionary'''
@@ -111,8 +108,9 @@ def OSSerializeBinary(xml_content):
     _OSSerializeBinary(s, parsed)
     return s.binary()
 
-print file
-s = OSSerializeBinary(file)
-for i in s:
-    print hex(i),
+if __name__ == '__main__':
+    print file
+    s = OSSerializeBinary(file)
+    for i in s:
+        print hex(i),
 
